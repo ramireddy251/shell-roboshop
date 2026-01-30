@@ -29,7 +29,7 @@ RECORD_NAME="$DOMAIN_NAME" # ramireddy.co.in
 else
  IP=$(
     aws ec2 describe-instances \
-    --instance-ids $instance_id \
+    --instance-ids $INSTANCE_ID \
     --query 'Reservations[].Instances[].PrivateIpAddress' \
     --output text
     ) 
