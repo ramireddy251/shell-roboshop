@@ -5,7 +5,7 @@ AMI_ID="ami-0220d79f3f480ecf5"
 SG_ID="sg-0f8e049cbcce85622"
 INSTANCE_TYPE="t3a.micro"
 ZONE_ID="Z00051682TGCBM123FIQG"
-DOMAIN_MANE="ramireccy.co.in"
+DOMAIN_MANE="ramireddy.co.in"
 
 for instance in $@
 do
