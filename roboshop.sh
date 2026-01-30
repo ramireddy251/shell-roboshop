@@ -4,6 +4,8 @@
 AMI_ID="ami-0220d79f3f480ecf5"
 SG_ID="sg-0f8e049cbcce85622"
 INSTANCE_TYPE="t3a.micro"
+ZONE_ID="Z00051682TGCBM123FIQG"
+DOMAIN_MANE="ramireccy.co.in"
 
 for instance in $@
 do
@@ -23,6 +25,7 @@ IP=$(
     --query 'Reservations[].Instances[].PublicIpAddress' \
     --output text
 )
+RECORD_NAME="$DOMAIN_NAME" # ramireddy.co.in
 else
  IP=$(
     aws ec2 describe-instances \
@@ -30,7 +33,35 @@ else
     --query 'Reservations[].Instances[].PrivateIpAddress' \
     --output text
     ) 
+    RECORD_NAME="$instance.$DOMAIN_NAME" # mongodb.co.in
+
 fi
 
 echo "IP address: $IP"
+
+aws route53 change-resource-record-sets \
+--hosted-zone-id $ZONE_ID \
+--change-batch '
+    {
+    "Comment": "updating record",
+    "Changes": [
+        {
+        "Action": "UPSERT",
+        "ResourceRecordSet": {
+            "Name": "'$RECORD_NAME'",
+            "Type": "A",
+            "TTL": 300,
+            "ResourceRecords": [
+            {
+                "Value": "'$IP'"
+            }
+            ]
+        }
+        }
+    ]
+    }
+'
+record updated for $instance
+
+
 done
