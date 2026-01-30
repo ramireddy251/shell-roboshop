@@ -13,21 +13,21 @@ INSTANCE_ID=$( aws ec2 run-instances \
 --instance-type $INSTANCE_TYPE \
 --security-group-ids $SG_ID \
 --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
---query 'Instances[0].InstanceId.PrivateIpAddress' \
+--query 'Instances[0].InstanceId' \
 --output text )
 
 if [ $INSTANCE_ID == "frontend" ]; then
 IP=$(
-    aws ec2 describe-instances \ 
-    --instance-ids $INSTANCE_ID \ 
-    --query 'Reservations[].Instances[].PublicIpAddress' \ 
+    aws ec2 describe-instances \
+    --instance-ids $INSTANCE_ID \
+    --query 'Reservations[].Instances[].PublicIpAddress' \
     --output text
 )
 else
  IP=$(
-    aws ec2 describe-instances \ 
-    --instance-ids $instance_id \ 
-    --query 'Reservations[].Instances[].PrivateIpAddress' \ 
+    aws ec2 describe-instances \
+    --instance-ids $instance_id \
+    --query 'Reservations[].Instances[].PrivateIpAddress' \
     --output text
     ) 
 fi
