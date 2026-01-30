@@ -7,7 +7,7 @@ INSTANCE_TYPE="t3a.micro"
 for instance in $@
 do
 
-instance_id = $( aws ec2 run-instances \
+instance_id=$( aws ec2 run-instances \
 --image-id $AMI_ID \
 --instance-type $INSTANCE_TYPE \
 --security-group-ids $SG_ID \
