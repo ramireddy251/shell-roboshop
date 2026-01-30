@@ -4,6 +4,7 @@ USERID=$(id -u)
 LOGS_FOLDER="/var/log/shell-roboshop"
 LOGS_FILE="$LOGS_FOLDER/$0.log"
 SCRIPT_DIR=$PWD
+MONGODB_HOST="mongodb.ramireddy.co.in"
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -67,6 +68,14 @@ systemctl enable catalogue
 systemctl start catalogue
 VALIDATE $? "Starting and enabling catalogue"
 
+cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
+VALIDATE $? "Copying mongo repo"
+
+dnf install mongodb-mongosh -y
+VALIDATE $? "Installing MongoDB client"
+
+mongosh --host $MONGODB_HOST </app/db/master-data.js
+VALIDATE $? "Loading data"
 
 
 
