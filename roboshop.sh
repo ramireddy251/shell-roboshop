@@ -35,4 +35,5 @@ else
 ) 
 fi
 
+echo "IP address: $IP"
 done
