@@ -10,6 +10,20 @@ DOMAIN_NAME="ramireddy.co.in"
 for instance in $@
 do
 
+echo "Processing instance: $instance"
+
+  # 🔍 Check if instance already exists
+  INSTANCE_ID=$(aws ec2 describe-instances \
+    --filters "Name=tag:Name,Values=$instance" \
+              "Name=instance-state-name,Values=running,stopped,pending" \
+    --query "Reservations[].Instances[].InstanceId" \
+    --output text)
+
+  if [ -n "$INSTANCE_ID" ]; then
+    echo "Instance '$instance' already exists: $INSTANCE_ID (SKIPPING creation)"
+  else
+    echo "Creating instance: $instance"
+
 INSTANCE_ID=$( aws ec2 run-instances \
 --image-id $AMI_ID \
 --instance-type $INSTANCE_TYPE \
@@ -17,6 +31,7 @@ INSTANCE_ID=$( aws ec2 run-instances \
 --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" \
 --query 'Instances[0].InstanceId' \
 --output text )
+
 
 if [ $instance == "frontend" ]; then
 IP=$(
@@ -62,6 +77,5 @@ aws route53 change-resource-record-sets \
     }
 '
 echo "record updated for $instance"
-
 
 done
