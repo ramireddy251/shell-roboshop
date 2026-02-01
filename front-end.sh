@@ -28,7 +28,7 @@ VALIDATE(){
 dnf module disable nginx -y
 VALIDATE $? "Disable Nginx"
 
-dnf module enable nginx:1.24 -y
+dnf module enable Nginx:1.24 -y
 VALIDATE $? "Enabled Nginx 1.24"
 
 dnf install nginx -y
