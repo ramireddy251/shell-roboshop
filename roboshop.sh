@@ -12,7 +12,7 @@ do
 
 echo "Processing instance: $instance"
 
-  # 🔍 Check if instance already exists
+  # Check if instance already exists
   INSTANCE_ID=$(aws ec2 describe-instances \
     --filters "Name=tag:Name,Values=$instance" \
               "Name=instance-state-name,Values=running,stopped,pending" \
