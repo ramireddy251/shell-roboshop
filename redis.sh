@@ -32,7 +32,7 @@ dnf module enable redis:7 -y
 VALIDATE $? "enable redis 7"
 
 dnf install redis -y 
-VALIDATE $? "Installing nginx"
+VALIDATE $? "Installing redis"
 
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/redis/redis.conf
 VALIDATE $? "Allowing remote connections"
