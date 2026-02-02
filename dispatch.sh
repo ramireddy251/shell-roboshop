@@ -25,42 +25,42 @@ VALIDATE(){
     fi
 }
 
-dnf install golang -y
+dnf install golang -y &>>$LOGS_FILE
 VALIDATE $? "Installing golang"
 
-id roboshop 
+id roboshop &>>$LOGS_FILE
 if [ $? -ne 0 ]; then
-  useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+  useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOGS_FILE
   VALIDATE $? "creating roboshop user"
 else
 echo -e "Roboshop user already exists .... $Y SKIPPING $N"
 fi
 
-mkdir -p /app
+mkdir -p /app &>>$LOGS_FILE
 VALIDATE $? "Creating app directory"
 
-curl -L -o /tmp/dispatch.zip https://roboshop-artifacts.s3.amazonaws.com/dispatch-v3.zip 
+curl -L -o /tmp/dispatch.zip https://roboshop-artifacts.s3.amazonaws.com/dispatch-v3.zip &>>$LOGS_FILE
 VALIDATE $? "Downloading dispatch code"
 
-cd /app 
+cd /app &>>$LOGS_FILE
 VALIDATE $? "Changing directory to /app"
 
-rm -rf /app/*
+rm -rf /app/* &>>$LOGS_FILE
 VALIDATE $? "Removing if code exists"
 
-unzip /tmp/dispatch.zip
+unzip /tmp/dispatch.zip &>>$LOGS_FILE
 VALIDATE $? "Unziping code"
 
-go mod init dispatch
+go mod init dispatch &>>$LOGS_FILE
 VALIDATE $? "init go"
 
-go get
+go get &>>$LOGS_FILE
 VALIDATE $? "get go"
 
-go build
+go build &>>$LOGS_FILE
 VALIDATE $? "Build go"
 
-cp $SCRIPT_DIR/dispatch.service /etc/systemd/system/dispatch.service
+cp $SCRIPT_DIR/dispatch.service /etc/systemd/system/dispatch.service &>>$LOGS_FILE
 
 systemctl daemon-reload
 systemctl enable dispatch 
