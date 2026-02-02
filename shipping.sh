@@ -4,6 +4,7 @@ USERID=$(id -u)
 LOGS_FOLDER="/var/log/shell-roboshop"
 LOGS_FILE="$LOGS_FOLDER/$0.log"
 SCRIPT_DIR=$PWD
+MYSQL_HOST="mysql.ramireddy.co.in"
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
@@ -68,14 +69,21 @@ VALIDATE $? "Enabled and started shipping service"
 dnf install mysql -y &>>$LOGS_FILE
 VALIDATE $? "Installing mysql client"
 
-mysql -h mysql.ramireddy.co.in -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOGS_FILE
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities'
+if [$? -ne 0]; then
+
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOGS_FILE
 VALIDATE $? "Loading schema in to db"
 
-mysql -h mysql.ramireddy.co.in -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOGS_FILE
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOGS_FILE
 VALIDATE $? "Create app user in mysql db"
 
-mysql -h mysql.ramireddy.co.in -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOGS_FILE
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOGS_FILE
 VALIDATE $? "Loading master data in to db"
+
+else
+  echo "data is already loaded .... skipping"
+fi  
 
 systemctl restart shipping
 VALIDATE $? "restarting shipping service"
