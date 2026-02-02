@@ -9,21 +9,23 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 
-if [ $USERID -ne 0 ]; then
-    echo -e "$R Please run this script with root user access $N" | tee -a $LOGS_FILE
-    exit 1
-fi
+# if [ $USERID -ne 0 ]; then
+#     echo -e "$R Please run this script with root user access $N" | tee -a $LOGS_FILE
+#     exit 1
+# fi
 
-mkdir -p $LOGS_FOLDER
+# mkdir -p $LOGS_FOLDER
 
-VALIDATE(){
-    if [ $1 -ne 0 ]; then
-        echo -e "$2 ... $R FAILURE $N" | tee -a $LOGS_FILE
-        exit 1
-    else
-        echo -e "$2 ... $G SUCCESS $N" | tee -a $LOGS_FILE
-    fi
-}
+# VALIDATE(){
+#     if [ $1 -ne 0 ]; then
+#         echo -e "$2 ... $R FAILURE $N" | tee -a $LOGS_FILE
+#         exit 1
+#     else
+#         echo -e "$2 ... $G SUCCESS $N" | tee -a $LOGS_FILE
+#     fi
+# }
+
+source ./common-script.sh
 
 dnf module disable nodejs -y &>>$LOGS_FILE
 VALIDATE $? "Disable nodejs"
