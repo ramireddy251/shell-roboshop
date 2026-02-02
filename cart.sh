@@ -25,26 +25,26 @@ VALIDATE(){
     fi
 }
 
-dnf module disable nodejs -y
+dnf module disable nodejs -y &>>$LOGS_FILE
 VALIDATE $? "Disable nodejs"
 
-dnf module enable nodejs:20 -y
+dnf module enable nodejs:20 -y &>>$LOGS_FILE
 VALIDATE $? "Enable nodejs 20"
 
 dnf install nodejs -y
-VALIDATE $? "Installing nodejs"
+VALIDATE $? "Installing nodejs" &>>$LOGS_FILE
 
-id roboshop 
+id roboshop &>>$LOGS_FILE
 if [ $? -ne 0 ]; then
-  useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+  useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOGS_FILE
   VALIDATE $? "creating roboshop user"
 else
 echo -e "Roboshop user already exists .... $Y SKIPPING $N"
 fi
 
-mkdir -p /app
+mkdir -p /app &>>$LOGS_FILE
 
-curl -L -o /tmp/cart.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip
+curl -L -o /tmp/cart.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip &>>$LOGS_FILE
 VALIDATE $? "Downloading cart code"
 
 cd /app 
@@ -53,10 +53,10 @@ VALIDATE $? "Changing directory to /app"
 rm -rf /app/*
 VALIDATE $? "removing if there is any existing code"
 
-unzip /tmp/cart.zip
+unzip /tmp/cart.zip &>>$LOGS_FILE
 VALIDATE $? "Unzipping code to /app"
 
-npm install 
+npm install &>>$LOGS_FILE
 VALIDATE $? "installing npm"
 
 cp $SCRIPT_DIR/cart.service /etc/systemd/system/cart.service
