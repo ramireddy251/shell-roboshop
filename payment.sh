@@ -25,36 +25,36 @@ VALIDATE(){
     fi
 }
 
-dnf install python3 gcc python3-devel -y
+dnf install python3 gcc python3-devel -y &>>$LOGS_FILE
 VALIDATE $? "Installing python3"
 
-id roboshop 
+id roboshop &>>$LOGS_FILE
 if [ $? -ne 0 ]; then
-  useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+  useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOGS_FILE
   VALIDATE $? "creating roboshop user"
 else
 echo -e "Roboshop user already exists .... $Y SKIPPING $N"
 fi
 
-mkdir -p /app
+mkdir -p /app &>>$LOGS_FILE
 VALIDATE $? "created app directory"
 
-curl -L -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip 
+curl -L -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip &>>$LOGS_FILE
 VALIDATE $? "Downloading payment code"
 
-cd /app 
+cd /app &>>$LOGS_FILE
 VALIDATE $? "Changed directory to /app"
 
-rm -rf /app/*
+rm -rf /app/* &>>$LOGS_FILE
 VALIDATE $? "removing if there is code exists"
 
-unzip /tmp/payment.zip
+unzip /tmp/payment.zip &>>$LOGS_FILE
 VALIDATE $? "Unziping code"
 
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt &>>$LOGS_FILE
 VALIDATE $? "installing requirements.txt"
 
-cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service
+cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service &>>$LOGS_FILE
 
 systemctl daemon-reload
 systemctl enable payment 
