@@ -25,7 +25,7 @@ VALIDATE(){
     fi
 }
 
-dnf install maven -y
+dnf install maven -y &>>$LOGS_FILE
 VALIDATE $? "Installing maven"
 
 id roboshop &>>$LOGS_FILE
@@ -36,28 +36,28 @@ else
 echo -e "Roboshop user already exists .... $Y SKIPPING $N"
 fi
 
-mkdir -p /app
+mkdir -p /app &>>$LOGS_FILE
 VALIDATE $? "Creating app directory"
 
-curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
+curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip &>>$LOGS_FILE
 VALIDATE $? "Downloading shipping code"
 
-cd /app 
+cd /app &>>$LOGS_FILE
 VALIDATE $? "Change directory to /app"
 
-rm -rf /app/*
+rm -rf /app/* &>>$LOGS_FILE
 VALIDATE $? "removing if there is code exists"
 
-unzip /tmp/shipping.zip
+unzip /tmp/shipping.zip &>>$LOGS_FILE
 VALIDATE $? "Unziping code into /app"
 
-mvn clean package 
+mvn clean package &>>$LOGS_FILE
 VALIDATE $? "packaging"
 
-mv target/shipping-1.0.jar shipping.jar 
+mv target/shipping-1.0.jar shipping.jar &>>$LOGS_FILE
 VALIDATE $? "renaming and moving to /app"
 
-cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
+cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service &>>$LOGS_FILE
 VALIDATE $? "copying shipping.service file"
 
 systemctl daemon-reload
@@ -65,16 +65,16 @@ systemctl enable shipping
 systemctl start shipping
 VALIDATE $? "Enabled and started shipping service"
 
-dnf install mysql -y 
+dnf install mysql -y &>>$LOGS_FILE
 VALIDATE $? "Installing mysql client"
 
-mysql -h mysql.ramireddy.co.in -uroot -pRoboShop@1 < /app/db/schema.sql
+mysql -h mysql.ramireddy.co.in -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOGS_FILE
 VALIDATE $? "Loading schema in to db"
 
-mysql -h mysql.ramireddy.co.in -uroot -pRoboShop@1 < /app/db/app-user.sql 
+mysql -h mysql.ramireddy.co.in -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOGS_FILE
 VALIDATE $? "Create app user in mysql db"
 
-mysql -h mysql.ramireddy.co.in -uroot -pRoboShop@1 < /app/db/master-data.sql
+mysql -h mysql.ramireddy.co.in -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOGS_FILE
 VALIDATE $? "Loading master data in to db"
 
 systemctl restart shipping
