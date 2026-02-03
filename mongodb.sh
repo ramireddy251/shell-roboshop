@@ -24,9 +24,6 @@ VALIDATE(){
     fi
 }
 
-source ./common-script.sh
-
-
 cp mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOGS_FILE
 VALIDATE $? "Copying mongo repo"
 
