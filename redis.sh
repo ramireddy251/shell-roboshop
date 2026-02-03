@@ -25,9 +25,6 @@ VALIDATE(){
     fi
 }
 
-source ./common-script.sh
-
-
 dnf module disable redis -y &>>$LOGS_FILE
 VALIDATE $? "Disable redis"
 
