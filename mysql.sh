@@ -25,8 +25,6 @@ VALIDATE(){
     fi
 }
 
-source ./common-script.sh
-
 dnf install mysql-server -y &>>$LOGS_FILE
 VALIDATE $? "Installing mysql server"
 
