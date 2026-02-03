@@ -25,9 +25,6 @@ VALIDATE(){
     fi
 }
 
-source ./common-script.sh
-
-
 dnf install python3 gcc python3-devel -y &>>$LOGS_FILE
 VALIDATE $? "Installing python3"
 
