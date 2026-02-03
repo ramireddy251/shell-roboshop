@@ -49,7 +49,7 @@ else
     --query 'Reservations[].Instances[].PrivateIpAddress' \
     --output text
     ) 
-    RECORD_NAME="$instance.$DOMAIN_NAME" # mongodb.co.in
+    RECORD_NAME="$instance.$DOMAIN_NAME" # mongodb.ramireddy.co.in
 
 fi
 
