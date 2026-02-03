@@ -25,9 +25,6 @@ VALIDATE(){
     fi
 }
 
-source ./common-script.sh
-
-
 cp $SCRIPT_DIR/rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo &>>$LOGS_FILE
 VALIDATE $? "Copying rabbitmq.repo"
 
