@@ -25,8 +25,6 @@ VALIDATE(){
     fi
 }
 
-source ./common-script.sh
-
 dnf install golang -y &>>$LOGS_FILE
 VALIDATE $? "Installing golang"
 
