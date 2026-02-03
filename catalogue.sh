@@ -26,8 +26,6 @@ VALIDATE(){
     fi
 }
 
-source ./common-script.sh
-
 dnf module disable nodejs -y &>>$LOGS_FILE
 VALIDATE $? "disable nodejs"
 
