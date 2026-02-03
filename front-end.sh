@@ -25,9 +25,6 @@ VALIDATE(){
     fi
 }
 
-source ./common-script.sh
-
-
 dnf module disable nginx -y &>>$LOGS_FILE
 VALIDATE $? "Disable Nginx"
 
