@@ -49,18 +49,18 @@ curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue
 VALIDATE $? "Downloading catalogue code"
 
 cd /app 
-VALIDATE $? "Moving to app directory"
+VALIDATE $? "Moving to app directory" 
 
 rm -rf /app/*
 VALIDATE $? "Removing existing code"
 
-unzip /tmp/catalogue.zip
+unzip /tmp/catalogue.zip &>>$LOGS_FILE
 VALIDATE $? "unzip catalogue code"
 
-npm install 
+npm install &>>$LOGS_FILE
 VALIDATE $? "installing npm"
 
-cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
+cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service &>>$LOGS_FILE
 VALIDATE $? "Copying catalogue service config"
 
 systemctl daemon-reload
@@ -71,13 +71,13 @@ VALIDATE $? "Starting and enabling catalogue"
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Copying mongo repo"
 
-dnf install mongodb-mongosh -y
+dnf install mongodb-mongosh -y &>>$LOGS_FILE
 VALIDATE $? "Installing MongoDB client"
 
 INDEX=$(mongosh --host $MONGODB_HOST --quiet  --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
 
 if [ $INDEX -le 0 ]; then
-    mongosh --host $MONGODB_HOST </app/db/master-data.js
+    mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOGS_FILE
     VALIDATE $? "Loading products"
 else
     echo -e "Products already loaded ... $Y SKIPPING $N"
